@@ -9,8 +9,12 @@ import java.math.BigDecimal;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -25,6 +29,10 @@ public class ProductRepositoryTest {
 	private ProductRepository productRepository;
 	private Product product1  = null;
 	private Product product2 = null;
+	@Rule
+	public TestName testName = new TestName();
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProductRepositoryTest.class);
 	
 	@Autowired
 	public void setProductRepository(ProductRepository productRepository) {
@@ -45,6 +53,8 @@ public class ProductRepositoryTest {
 		product2.setPrice(new BigDecimal("91.95"));
 		product2.setProductId("986");
 		productRepository.save(product2);
+		
+		LOGGER.info("Started test "+ testName.getMethodName());
 //		save
 //		getall
 //		update
@@ -56,6 +66,8 @@ public class ProductRepositoryTest {
 	@After
 	public void after() throws Exception{
 		productRepository.deleteAll();
+		LOGGER.info("Finished test "+ testName.getMethodName());
+
 	}
 	
 	@Test
@@ -70,6 +82,7 @@ public class ProductRepositoryTest {
 		productRepository.save(product);
 		
 		assertNotNull(product.getId());
+
 		
 	}
 	
@@ -85,6 +98,7 @@ public class ProductRepositoryTest {
 		product1.setDescription("Description cambiada");
 		Product updatedProduct = productRepository.save(product1);
 		assertEquals(updatedProduct.getDescription(), "Description cambiada");
+
 	}
 
 	@Test
